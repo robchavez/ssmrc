@@ -39,7 +39,7 @@ rc_tstat_plot <- function(stat_df, backgroud_image = NULL, corrp_thresh = .05){
       scale_fill_gradient2(na.value = NA, 
                            high = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026"),
                            low = c( "#08519C", "#3182BD","#6BAED6", "#9ECAE1", "#C6DBEF" ),
-                           name = 'corrected \np-value')  + 
+                           name = 't-value')  + 
       theme_void() + 
       theme( plot.margin = unit(c(0,.5,0,0), "cm"))
     
@@ -52,7 +52,7 @@ rc_tstat_plot <- function(stat_df, backgroud_image = NULL, corrp_thresh = .05){
       scale_fill_gradient2(na.value = NA, 
                            high = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026"),
                            low = c( "#08519C", "#3182BD","#6BAED6", "#9ECAE1", "#C6DBEF" ),
-                           name = 'corrected \np-value')  + 
+                           name = 't-value')  + 
       theme_void() + 
       theme( plot.margin = unit(c(0,.5,0,0), "cm"))
     return(outplot)
