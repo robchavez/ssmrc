@@ -4,12 +4,12 @@
 \alias{rc_tstat_plot}
 \title{Plot t-values within significant corrected p-value reverse correlation maps}
 \usage{
-rc_tstat_plot(stat_df, backgroud_image = NULL, corrp_thresh = 0.05)
+rc_tstat_plot(stat_df, background_image = NULL, corrp_thresh = 0.05)
 }
 \arguments{
 \item{stat_df}{a data frame object with t-value, p-value, and coordinate information (e.g., output from run_pixel_ttests())}
 
-\item{backgroud_image}{a matrix in the same dimensions as the stat_df}
+\item{background_image}{a matrix in the same dimensions as the stat_df}
 
 \item{corrp_thresh}{corrected p-value threshold}
 }

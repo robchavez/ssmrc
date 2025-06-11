@@ -15,10 +15,9 @@
 
 
 run_pixel_ttests <- function(array1, array2, mask = NULL, corr_p_method = 'fdr', paired = FALSE, var_equal = FALSE) {
-  
   # Get the dimensions of the arrays
   dims <- dim(array1)
-  if (!identical(dims, dim(array2))) {
+  if (!identical(dims, dim(array2)) & paired == TRUE) {
     stop("Input arrays must have the same dimensions.")
   }
   
@@ -44,12 +43,19 @@ run_pixel_ttests <- function(array1, array2, mask = NULL, corr_p_method = 'fdr',
       test_result <- tryCatch({
         
         if(paired==FALSE){
+          
+          val <- c(samples1, samples2)
+          group <- c(rep('group1', length(samples1)), rep('group2', length(samples2)))
+          ind_t_df <- data.frame(val, group) 
+          
           if(var_equal == FALSE){
-            t.test(samples1, samples2, paired=FALSE, var.equal = FALSE)
+            t.test(val ~ group, var.equal = FALSE, data = ind_t_df)
           } else{
-            t.test(samples1, samples2, paired=FALSE, var.equal = TRUE)
+            t.test(val ~ group,  var.equal = TRUE, data = ind_t_df)
           }
+          
         } else {
+          
           if(var_equal == FALSE){
             t.test(samples1, samples2, paired=TRUE, var.equal = FALSE)
           } else{

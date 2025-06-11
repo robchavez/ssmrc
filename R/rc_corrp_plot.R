@@ -2,14 +2,14 @@
 #'
 #' Returns a ggplot2 plot object corrected p-values spatial statistical map
 #' @param stat_df a data frame object with t-value, p-value, and coordinate information (e.g., output from run_pixel_ttests())
-#' @param backgroud_image a matrix in the same dimensions as the stat_df
+#' @param background_image a matrix in the same dimensions as the stat_df
 #' @param corrp_thresh corrected p-value threshold
 #' @author Robert S. Chavez
 #' @export
 #' @examples
 #' rc_corrp_plot(my_pixel_ttest, background_image = my_mean_rc_image)
 
-rc_corrp_plot <- function(stat_df, backgroud_image = NULL, corrp_thresh = .05){
+rc_corrp_plot <- function(stat_df, background_image = NULL, corrp_thresh = .05){
   
   require(ggplot2)
   require(ggnewscale)
@@ -22,8 +22,8 @@ rc_corrp_plot <- function(stat_df, backgroud_image = NULL, corrp_thresh = .05){
     stop("There are no significant pixels.")
   }
   
-  if(is.null(backgroud_image) == FALSE){
-    pvaldf$base <- as.vector(backgroud_image)
+  if(is.null(background_image) == FALSE){
+    pvaldf$base <- as.vector(background_image)
     
     # plot
     outplot <-ggplot(pvaldf, aes(Ycoord, -Xcoord, fill=base)) + 
