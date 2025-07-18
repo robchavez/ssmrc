@@ -1,71 +1,61 @@
-#' Runs t-test between two reverse correlation 3D arrays
+#' Runs correlation between a variable and a reverse correlation 3D array
 #'
 #' Calculates 2D summary statistics from all points of a reverse correlation list object 
-#' @param array1 a reverse correlation 3D array
-#' @param array2 a reverse correlation 3D array
+#' @param array a reverse correlation 3D array
+#' @param cor_var a vector of values to correlate with pixels
 #' @param mask 2D matrix used for selecting pixels to analyze (i.e., "masking")
+#' @param cor_method correlation method to use, either 'pearson', 'spearman', or 'kendall'
 #' @param corr_p_method multiple comparison correction method from p.adjust() to be used
-#' @param paired logical if the t-test is a paired samples t-test
-#' @param var_equal logical if equal variance is assumed 
 #' @author Robert S. Chavez
 #' @export
 #' @examples
-#' mat <- matrix(sample(0:1, 100, replace = TRUE),nrow = 10, ncol = 10 )
-#' masker(mat)
+#' run_pixel_correlation(facearray, bias_variable, mask = NULL, cor_method = 'pearson', corr_p_method = 'fdr' ) 
 
 
-run_pixel_ttests <- function(array1, array2, mask = NULL, corr_p_method = 'fdr', paired = FALSE, var_equal = FALSE) {
-  
+run_pixel_correlation <- function(array, cor_var, mask = NULL, cor_method = 'pearson', corr_p_method = 'fdr' ) {
   # Get the dimensions of the arrays
-  dims <- dim(array1)
-  if (!identical(dims, dim(array2))) {
-    stop("Input arrays must have the same dimensions.")
-  }
+  dims <- dim(array)
   
   x_dim <- dims[1]
   y_dim <- dims[2]
-  # z_dim is the sample dimension
   
   # Initialize matrices to store p-values, t-statistics, and coordinates
   p_values <- matrix(NA, nrow = x_dim, ncol = y_dim)
-  t_statistics <- matrix(NA, nrow = x_dim, ncol = y_dim)
+  r_statistics <- matrix(NA, nrow = x_dim, ncol = y_dim)
   xcoord <- matrix(NA, nrow = x_dim, ncol = y_dim)
   ycoord <- matrix(NA, nrow = x_dim, ncol = y_dim) 
   
   # Loop through each X-Y coordinate
   for (i in 1:x_dim) {
     for (j in 1:y_dim) {
+      
       # Extract the vectors of samples for the current X-Y coordinate
-      samples1 <- array1[i, j, ]
-      samples2 <- array2[i, j, ]
+      samples1 <- array[i, j, ]
+      
       
       # Perform the t-test
       # The tryCatch will handle cases where a t-test cannot be performed (e.g., insufficient variance)
       test_result <- tryCatch({
         
-        if(paired==FALSE){
-          if(var_equal == FALSE){
-            t.test(samples1, samples2, paired=FALSE, var.equal = FALSE)
-          } else{
-            t.test(samples1, samples2, paired=FALSE, var.equal = TRUE)
-          }
+        if(cor_method =='pearson'){
+          
+          cor.test(samples1, cor_var, method = 'pearson')
+          
         } else {
-          if(var_equal == FALSE){
-            t.test(samples1, samples2, paired=TRUE, var.equal = FALSE)
-          } else{
-            t.test(samples1, samples2, paired=TRUE, var.equal = TRUE)
-          }
+          
+          cor.test(samples1, cor_var, method = cor_method)
+          
         }
         
         
       }, error = function(e) {
         # Return NA if t-test fails
-        list(p.value = NA, statistic = NA)
+        list(p.value = NA, estimate = NA)
       })
       
       # Store the p-value and t-statistic
       p_values[i, j] <- test_result$p.value
-      t_statistics[i, j] <- test_result$statistic
+      r_statistics[i, j] <- test_result$estimate
       xcoord[i, j] <- i
       ycoord[i, j] <- j
     }
@@ -102,6 +92,6 @@ run_pixel_ttests <- function(array1, array2, mask = NULL, corr_p_method = 'fdr',
                     Ycoord = as.vector(ycoord),
                     p_values = as.vector(p_values), 
                     corr_p_values = corr_p_values,
-                    t_statistics = as.vector(t_statistics)))
+                    r_statistics = as.vector(r_statistics)))
   
 }

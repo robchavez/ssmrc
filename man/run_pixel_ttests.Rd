@@ -30,8 +30,7 @@ run_pixel_ttests(
 Calculates 2D summary statistics from all points of a reverse correlation list object
 }
 \examples{
-mat <- matrix(sample(0:1, 100, replace = TRUE),nrow = 10, ncol = 10 )
-masker(mat)
+run_pixel_ttests(array1, array2, mask = maskface, paired = T)
 }
 \author{
 Robert S. Chavez

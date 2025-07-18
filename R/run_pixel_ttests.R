@@ -10,8 +10,7 @@
 #' @author Robert S. Chavez
 #' @export
 #' @examples
-#' mat <- matrix(sample(0:1, 100, replace = TRUE),nrow = 10, ncol = 10 )
-#' masker(mat)
+#' run_pixel_ttests(array1, array2, mask = maskface, paired = T)
 
 
 run_pixel_ttests <- function(array1, array2, mask = NULL, corr_p_method = 'fdr', paired = FALSE, var_equal = FALSE) {
